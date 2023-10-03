@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import Card from "./Card";
 import { DeckContext } from "../index";
 import { updateCard, discardCard } from "../../../api";
@@ -16,6 +16,8 @@ function Review({ deckInReview }: DeckReviewProps) {
   const [cardInReview, setCardInReview] = React.useState<number>(0);
   const [reviewInProgress, setReviewInProgress] = React.useState<boolean>(true);
 
+  const [showFront, setShowFront] = useState(true);
+
   async function correctCard() {
     // Increment the "deck" property for the current card
     const lastDeck: boolean = deckInReview === 4;
@@ -24,6 +26,7 @@ function Review({ deckInReview }: DeckReviewProps) {
       await updateCard(cards[cardInReview].id, moveCardToNewDeck);
       if (cardInReview < cards.length - 1) {
         setCardInReview((prev) => prev + 1);
+        setShowFront(true)
       } else {
         setReviewInProgress(false);
       }
@@ -40,6 +43,7 @@ function Review({ deckInReview }: DeckReviewProps) {
       await updateCard(cards[cardInReview].id, moveCardToNewDeck);
       if (cardInReview < cards.length - 1) {
         setCardInReview((prev) => prev + 1);
+        setShowFront(true)
       } else {
         setReviewInProgress(false);
       }
@@ -51,6 +55,7 @@ function Review({ deckInReview }: DeckReviewProps) {
   function skipCard() {
     if (cardInReview < cards.length - 1) {
       setCardInReview((prev) => prev + 1);
+      setShowFront(true)
     } else {
       setReviewInProgress(false);
     }
@@ -80,7 +85,7 @@ function Review({ deckInReview }: DeckReviewProps) {
   return reviewInProgress && cards.length ? (
     <div>
       <h1>Deck {deckInReview} Review</h1>
-      <Card card={cards[cardInReview].data} />
+      <Card card={cards[cardInReview].data} showFront={showFront} setShowFront={setShowFront} />
       <div style={{ margin: "1rem" }}>
         <button style={{ marginRight: "1rem" }} onClick={correctCard}>Correct</button>
         <button onClick={wrongCard}>Wrong</button>

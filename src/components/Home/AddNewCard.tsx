@@ -31,18 +31,22 @@ function AddNewCard() {
         <div>
             <h2>Add New Card</h2>
             <div>
-                <input
-                    type="text"
-                    placeholder="Front"
-                    value={front}
-                    onChange={(e) => setFront(e.target.value)}
-                />
-                <input
-                    type="text"
-                    placeholder="Back"
-                    value={back}
-                    onChange={(e) => setBack(e.target.value)}
-                />
+                <div style={{ display: "flex", margin: "1rem" }}>
+                    <input
+                        style={{ margin: "1rem", width:"50%", height: "2rem", fontSize: "2rem" }}
+                        type="text"
+                        placeholder="Front"
+                        value={front}
+                        onChange={(e) => setFront(e.target.value)}
+                    />
+                    <input
+                        style={{ margin: "1rem", width:"50%", height: "2rem", fontSize: "2rem" }}
+                        type="text"
+                        placeholder="Back"
+                        value={back}
+                        onChange={(e) => setBack(e.target.value)}
+                    />
+                </div>
                 <button onClick={handleAddCard}>Add Card</button>
             </div>
         </div>
