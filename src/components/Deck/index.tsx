@@ -19,20 +19,20 @@ function Deck() {
   const { id } = useParams<{ id: string | undefined }>();
   const [cards, setCards] = useState<CardData[]>([]);
   const [deckViewToggle, setDeckViewToggle] = useState(false)
-//   const [loading, setLoading] = useState<boolean>(false);
-//   const [error, setError] = useState<Error | null>(null);
+  const [loading, setLoading] = useState<boolean>(false);
+  // const [error, setError] = useState<Error | null>(null);
 
   useEffect(() => {
     // Fetch cards based on the 'id' parameter from the URL
     async function loadDeckCards(deckId: number) {
-    //   setLoading(true);
+      setLoading(true);
       try {
         const data = await getDeckCards(deckId);
         setCards(data);
       } catch (err) {
         // setError(err);
       } finally {
-        // setLoading(false);
+        setLoading(false);
       }
     }
     if(id){
@@ -47,11 +47,14 @@ function Deck() {
 
   return (
     <DeckContext.Provider value={contextValue}>
+      {!loading?
       <div>
-        {id && <Review deckInReview={Number(id)}/>}
-        <button onClick={()=>setDeckViewToggle(!deckViewToggle)}>View all deck cards</button>
-        {deckViewToggle ? <View /> : null}
+        {id && cards.length > 0 ? <Review deckInReview={Number(id)}/> : <h1>No cards found</h1>}
+        {cards.length > 0 && <button onClick={()=>setDeckViewToggle(!deckViewToggle)}>View all deck cards</button>}
+        {deckViewToggle &&  <View />}
       </div>
+      : <div><h1>Loading...</h1></div>
+}
     </DeckContext.Provider>
   );
 }

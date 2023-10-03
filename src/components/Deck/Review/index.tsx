@@ -81,16 +81,19 @@ function Review({ deckInReview }: DeckReviewProps) {
     <div>
       <h1>Deck {deckInReview} Review</h1>
       <Card card={cards[cardInReview].data} />
-      <div style={{margin:"1rem"}}>
-        <button onClick={correctCard}>Correct</button>
+      <div style={{ margin: "1rem" }}>
+        <button style={{ marginRight: "1rem" }} onClick={correctCard}>Correct</button>
         <button onClick={wrongCard}>Wrong</button>
       </div>
-      <button style={{marginBottom:"1rem", marginRight:"1rem"}} onClick={skipCard}>Skip</button>
-      <button style={{marginBottom:"1rem", backgroundColor:"red", color:"white"}} onClick={deleteCard}>Delete card</button>
+      <button style={{ marginBottom: "1rem", marginRight: "1rem" }} onClick={skipCard}>Skip</button>
+      <button style={{ marginBottom: "1rem", backgroundColor: "red", color: "white" }} onClick={deleteCard}>Delete card</button>
     </div>
   ) : (
     <div>
       <h1>Finished</h1>
+      <div style={{ marginBottom: "1rem"}}>
+        <button onClick={() => window.location.reload()}>Review again</button>
+      </div>
     </div>
   );
 }
