@@ -1,14 +1,15 @@
-import { useState } from "react";
-import { addNewCard } from "../../api";
+import { useState } from 'react';
+import { Button, TextField, Typography, Grid } from '@mui/material';
+import { addNewCard } from '../../api';
 
 function AddNewCard() {
-    const [front, setFront] = useState<string>("");
-    const [back, setBack] = useState<string>("");
+    const [front, setFront] = useState('');
+    const [back, setBack] = useState('');
 
     const handleAddCard = async () => {
         // Perform validation if needed
         if (!front || !back) {
-            alert("Please fill in both front and back fields.");
+            alert('Please fill in both front and back fields.');
             return;
         }
 
@@ -17,39 +18,47 @@ function AddNewCard() {
             await addNewCard(front, back);
 
             // Clear the form fields
-            setFront("");
-            setBack("");
+            setFront('');
+            setBack('');
 
             // Optionally, you can display a success message or navigate to another page
-            alert(`Card added successfully`);
+            alert('Card added successfully');
         } catch (error) {
-            console.error("Error adding card:", error);
+            console.error('Error adding card:', error);
         }
     };
 
     return (
-        <div>
-            <h2>Add New Card</h2>
-            <div>
-                <div style={{ display: "flex", margin: "1rem" }}>
-                    <input
-                        style={{ margin: "1rem", width:"50%", height: "2rem", fontSize: "2rem" }}
-                        type="text"
-                        placeholder="Front"
-                        value={front}
-                        onChange={(e) => setFront(e.target.value)}
-                    />
-                    <input
-                        style={{ margin: "1rem", width:"50%", height: "2rem", fontSize: "2rem" }}
-                        type="text"
-                        placeholder="Back"
-                        value={back}
-                        onChange={(e) => setBack(e.target.value)}
-                    />
-                </div>
-                <button onClick={handleAddCard}>Add Card</button>
-            </div>
-        </div>
+        <Grid container spacing={4}>
+            <Grid item xs={12}>
+                <Typography variant="h4" gutterBottom>
+                    Add New Card:
+                </Typography>
+            </Grid>
+            <Grid item xs={6}>
+                <TextField
+                    label="Front"
+                    variant="outlined"
+                    fullWidth
+                    value={front}
+                    onChange={(e) => setFront(e.target.value)}
+                />
+            </Grid>
+            <Grid item xs={6}>
+                <TextField
+                    label="Back"
+                    variant="outlined"
+                    fullWidth
+                    value={back}
+                    onChange={(e) => setBack(e.target.value)}
+                />
+            </Grid>
+            <Grid item xs={12}>
+                <Button variant="contained" color="primary" onClick={handleAddCard}>
+                    Add Card
+                </Button>
+            </Grid>
+        </Grid>
     );
 }
 

@@ -4,6 +4,8 @@ import Review from "./Review/index";
 import { useParams } from "react-router-dom";
 import { getDeckCards } from "../../api";
 import { CardData } from "../types";
+import Header from "../Header";
+import { Box, Button, CircularProgress, Container, Paper, Typography } from "@mui/material";
 
 interface DeckContextType {
   cards: CardData[];
@@ -12,7 +14,7 @@ interface DeckContextType {
 
 export const DeckContext = createContext<DeckContextType>({
   cards: [],
-  setCards: () => {},
+  setCards: () => { },
 });
 
 function Deck() {
@@ -35,7 +37,7 @@ function Deck() {
         setLoading(false);
       }
     }
-    if(id){
+    if (id) {
       loadDeckCards(Number(id));
     }
   }, [id]);
@@ -47,16 +49,41 @@ function Deck() {
 
   return (
     <DeckContext.Provider value={contextValue}>
-      {!loading?
-      <div>
-        {id && cards.length > 0 ? <Review deckInReview={Number(id)}/> : <h1>No cards found</h1>}
-        {cards.length > 0 && <button onClick={()=>setDeckViewToggle(!deckViewToggle)}>View all deck cards</button>}
-        {deckViewToggle &&  <View />}
-      </div>
-      : <div><h1>Loading...</h1></div>
-}
+      <Header />
+      <Container>
+        {loading ? (
+          <div style={{ textAlign: "center", marginTop: "2rem" }}>
+            <CircularProgress />
+            <Typography variant="h6">Loading...</Typography>
+          </div>
+        ) : (
+          <>
+            <Box mt={2}>
+              {id && cards.length > 0 ? (
+                <Review deckInReview={Number(id)} />
+              ) : (
+                <Paper elevation={3} style={{ padding: "1rem" }}>
+                  <Typography variant="h5">No cards found</Typography>
+                </Paper>
+              )}
+            </Box>
+            {cards.length > 0 && (
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={() => setDeckViewToggle(!deckViewToggle)}
+                style={{ marginTop: "1rem" }}
+              >
+                {deckViewToggle ? "Hide all deck cards" : "View all deck cards"}
+              </Button>
+            )}
+            {deckViewToggle && <View />}
+          </>
+        )}
+      </Container>
     </DeckContext.Provider>
   );
 }
+
 
 export default Deck;

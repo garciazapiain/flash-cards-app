@@ -1,3 +1,5 @@
+import React from "react";
+import { Button, Typography, Box } from "@mui/material";
 
 // Define the props for the CardReview component
 interface CardReviewProps {
@@ -5,21 +7,28 @@ interface CardReviewProps {
     front: string;
     back: string;
   } | null;
-  showFront:boolean;
+  showFront: boolean;
   setShowFront: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 function Card({ card, showFront, setShowFront }: CardReviewProps) {
-  console.log(showFront)
   // Ensure that card is not null before accessing its properties
-  const front = card && card.front;
-  const back = card && card.back;
+  const front = card?.front;
+  const back = card?.back;
 
   return (
-    <div>
-      <h1>{showFront ? front : back}</h1>
-      <button onClick={() => setShowFront(!showFront)}>Turn</button>
-    </div>
+    <Box margin={2}> {/* Adjust the margin value as needed */}
+      <Typography variant="h2">
+        {showFront ? front : back}
+      </Typography>
+      <Button
+        variant="contained"
+        color="primary"
+        onClick={() => setShowFront(!showFront)}
+      >
+        Turn
+      </Button>
+    </Box>
   );
 }
 

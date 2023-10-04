@@ -2,6 +2,9 @@ import React, { useContext, useEffect, useState } from "react";
 import Card from "./Card";
 import { DeckContext } from "../index";
 import { updateCard, discardCard } from "../../../api";
+import Button from "@mui/material/Button";
+import Typography from "@mui/material/Typography";
+import Grid from "@mui/material/Grid";
 
 // Define the props for the DeckReview component
 interface DeckReviewProps {
@@ -21,12 +24,12 @@ function Review({ deckInReview }: DeckReviewProps) {
   async function correctCard() {
     // Increment the "deck" property for the current card
     const lastDeck: boolean = deckInReview === 4;
-    const moveCardToNewDeck: number = lastDeck ? 0 : 1
+    const moveCardToNewDeck: number = lastDeck ? 0 : 1;
     try {
       await updateCard(cards[cardInReview].id, moveCardToNewDeck);
       if (cardInReview < cards.length - 1) {
         setCardInReview((prev) => prev + 1);
-        setShowFront(true)
+        setShowFront(true);
       } else {
         setReviewInProgress(false);
       }
@@ -38,12 +41,12 @@ function Review({ deckInReview }: DeckReviewProps) {
   async function wrongCard() {
     // Increment the "deck" property for the current card
     const firstDeck: boolean = deckInReview === 1;
-    const moveCardToNewDeck: number = firstDeck ? 0 : -1
+    const moveCardToNewDeck: number = firstDeck ? 0 : -1;
     try {
       await updateCard(cards[cardInReview].id, moveCardToNewDeck);
       if (cardInReview < cards.length - 1) {
         setCardInReview((prev) => prev + 1);
-        setShowFront(true)
+        setShowFront(true);
       } else {
         setReviewInProgress(false);
       }
@@ -55,7 +58,7 @@ function Review({ deckInReview }: DeckReviewProps) {
   function skipCard() {
     if (cardInReview < cards.length - 1) {
       setCardInReview((prev) => prev + 1);
-      setShowFront(true)
+      setShowFront(true);
     } else {
       setReviewInProgress(false);
     }
@@ -84,21 +87,45 @@ function Review({ deckInReview }: DeckReviewProps) {
 
   return reviewInProgress && cards.length ? (
     <div>
-      <h1>Deck {deckInReview} Review</h1>
+      <Typography variant="h4" gutterBottom>
+        Deck {deckInReview} Review
+      </Typography>
       <Card card={cards[cardInReview].data} showFront={showFront} setShowFront={setShowFront} />
-      <div style={{ margin: "1rem" }}>
-        <button style={{ marginRight: "1rem" }} onClick={correctCard}>Correct</button>
-        <button onClick={wrongCard}>Wrong</button>
-      </div>
-      <button style={{ marginBottom: "1rem", marginRight: "1rem" }} onClick={skipCard}>Skip</button>
-      <button style={{ marginBottom: "1rem", backgroundColor: "red", color: "white" }} onClick={deleteCard}>Delete card</button>
-    </div>
+      <Grid container spacing={2}>
+        <Grid margin={1} container spacing={2}>
+          <Grid item xs={6}>
+            <Button variant="contained" color="primary" onClick={correctCard} fullWidth>
+              Correct
+            </Button>
+          </Grid>
+          <Grid item xs={6}>
+            <Button variant="contained" color="primary" onClick={wrongCard} fullWidth>
+              Wrong
+            </Button>
+          </Grid>
+        </Grid>
+        <Grid margin={1} container spacing={2}>
+          <Grid item xs={6}>
+            <Button variant="contained" color="primary" onClick={skipCard} fullWidth>
+              Skip
+            </Button>
+          </Grid>
+          <Grid item xs={6}>
+            <Button variant="contained" style={{ backgroundColor: "red", color: "white" }} onClick={deleteCard} fullWidth>
+              Delete Card
+            </Button>
+          </Grid>
+        </Grid>
+      </Grid>
+    </div >
   ) : (
     <div>
-      <h1>Finished</h1>
-      <div style={{ marginBottom: "1rem"}}>
-        <button onClick={() => window.location.reload()}>Review again</button>
-      </div>
+      <Typography variant="h4" gutterBottom>
+        Finished
+      </Typography>
+      <Button variant="contained" color="primary" onClick={() => window.location.reload()}>
+        Review again
+      </Button>
     </div>
   );
 }
