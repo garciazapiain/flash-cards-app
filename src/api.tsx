@@ -44,7 +44,7 @@ export async function addNewCard(front: string, back: string): Promise<string> {
       front,
       back,
       deck: 1,
-      lastUpdated: new Date(),
+      lastUpdated: new Date(0),
     };
 
     // Define the collection reference here
@@ -68,7 +68,6 @@ export async function getDeckCards(deck: number): Promise<CardData[]> {
     orderBy("lastUpdated"), 
   );
   const snapshot = await getDocs(q);
-  console.log(snapshot)
   const deckCards: CardData[] = snapshot.docs.map((doc: QueryDocumentSnapshot<DocumentData>) => {
     const cardData: CardData = {
       id: doc.id, // Access the document ID
