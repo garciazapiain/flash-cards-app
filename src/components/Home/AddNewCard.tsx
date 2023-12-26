@@ -43,6 +43,7 @@ function AddNewCard() {
                     value={front}
                     onChange={(e) => setFront(e.target.value)}
                     InputLabelProps={{ style: { color: 'white' } }} 
+                    inputProps={{ style: { color: 'white' } }}
                 />
             </Grid>
             <Grid item xs={6}>
@@ -53,6 +54,7 @@ function AddNewCard() {
                     value={back}
                     onChange={(e) => setBack(e.target.value)}
                     InputLabelProps={{ style: { color: 'white' } }} 
+                    inputProps={{ style: { color: 'white' } }}
                 />
             </Grid>
             <Grid item xs={12}>
