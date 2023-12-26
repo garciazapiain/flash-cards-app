@@ -77,7 +77,7 @@ function Deck() {
                 {deckViewToggle ? "Hide all deck cards" : "View all deck cards"}
               </Button>
             )}
-            {deckViewToggle && <View />}
+            {deckViewToggle && <View cards={cards} />}
           </>
         )}
       </Container>
