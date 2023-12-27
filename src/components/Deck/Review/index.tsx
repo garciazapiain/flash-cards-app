@@ -2,6 +2,7 @@ import React, { useContext, useEffect, useState } from "react";
 import Card from "./Card";
 import { DeckContext } from "../index";
 import { updateCard, discardCard } from "../../../api";
+import { RadioGroup, FormControlLabel, Radio } from "@mui/material";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import Grid from "@mui/material/Grid";
@@ -19,7 +20,18 @@ function Review({ deckInReview }: DeckReviewProps) {
   const [cardInReview, setCardInReview] = React.useState<number>(0);
   const [reviewInProgress, setReviewInProgress] = React.useState<boolean>(true);
 
-  const [showFront, setShowFront] = useState(true);
+  const [initialCardSide, setInitialCardSide] = useState<'front' | 'back'>('front');
+  const [selectedSide, setSelectedSide] = useState<'front' | 'back' | 'random'>('front');
+
+  const [loading, setLoading] = useState(true);
+
+
+  // Add this function to handle the change of the radio buttons
+  const handleCardSideChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const value = (event.target as HTMLInputElement).value as 'front' | 'back' | 'random';
+    setSelectedSide(value);
+    console.log(selectedSide)
+  };
 
   async function correctCard() {
     // Increment the "deck" property for the current card
@@ -29,7 +41,7 @@ function Review({ deckInReview }: DeckReviewProps) {
       await updateCard(cards[cardInReview].id, moveCardToNewDeck);
       if (cardInReview < cards.length - 1) {
         setCardInReview((prev) => prev + 1);
-        setShowFront(true);
+        setInitialCardSide(initialCardSide);
       } else {
         setReviewInProgress(false);
       }
@@ -46,7 +58,7 @@ function Review({ deckInReview }: DeckReviewProps) {
       await updateCard(cards[cardInReview].id, moveCardToNewDeck);
       if (cardInReview < cards.length - 1) {
         setCardInReview((prev) => prev + 1);
-        setShowFront(true);
+        setInitialCardSide(initialCardSide);
       } else {
         setReviewInProgress(false);
       }
@@ -58,7 +70,8 @@ function Review({ deckInReview }: DeckReviewProps) {
   function skipCard() {
     if (cardInReview < cards.length - 1) {
       setCardInReview((prev) => prev + 1);
-      setShowFront(true);
+      setInitialCardSide(initialCardSide);
+      setLoading(true)
     } else {
       setReviewInProgress(false);
     }
@@ -90,7 +103,12 @@ function Review({ deckInReview }: DeckReviewProps) {
       <Typography variant="h4" gutterBottom>
         Deck {deckInReview} Review
       </Typography>
-      <Card card={cards[cardInReview].data} showFront={showFront} setShowFront={setShowFront} />
+      <RadioGroup row value={selectedSide} onChange={handleCardSideChange}>
+        <FormControlLabel value="front" control={<Radio />} label="Front first" />
+        <FormControlLabel value="back" control={<Radio />} label="Back first" />
+        <FormControlLabel value="random" control={<Radio />} label="Random" />
+      </RadioGroup>
+      <Card card={cards[cardInReview].data} selectedSide={selectedSide} loading={loading} setLoading={setLoading} />
       <Grid container spacing={2}>
         <Grid margin={1} container spacing={2}>
           <Grid item xs={6}>

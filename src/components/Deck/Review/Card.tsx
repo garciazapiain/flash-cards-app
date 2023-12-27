@@ -1,5 +1,5 @@
-import React from "react";
-import { Button, Typography, Box } from "@mui/material";
+import React, { useEffect, useState } from "react";
+import { Button, Typography, Box, CircularProgress } from "@mui/material";
 
 // Define the props for the CardReview component
 interface CardReviewProps {
@@ -7,24 +7,45 @@ interface CardReviewProps {
     front: string;
     back: string;
   } | null;
-  showFront: boolean;
-  setShowFront: React.Dispatch<React.SetStateAction<boolean>>;
+  selectedSide: 'front' | 'back' | 'random';
+  loading: boolean;
+  setLoading: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-function Card({ card, showFront, setShowFront }: CardReviewProps) {
-  // Ensure that card is not null before accessing its properties
+function Card({ card, selectedSide, loading, setLoading }: CardReviewProps) {
+  const [currentCard, setCurrentCard] = useState<'front' | 'back' | null>(null);
+
+  useEffect(() => {
+    if (card) {
+      if (selectedSide === 'random') {
+        setCurrentCard(Math.random() < 0.5 ? 'front' : 'back');
+      } else {
+        setCurrentCard(selectedSide);
+      }
+      setTimeout(() => {setLoading(false)}, 300);
+    }
+  }, [selectedSide, card]);
+
   const front = card?.front;
   const back = card?.back;
+
+  const handleTurn = () => {
+    setCurrentCard(currentCard === 'front' ? 'back' : 'front');
+  };
+
+  if (loading) {
+    return <CircularProgress />;
+  }
 
   return (
     <Box margin={2}> {/* Adjust the margin value as needed */}
       <Typography variant="h2">
-        {showFront ? front : back}
+        {currentCard === "front" ? front : back}
       </Typography>
       <Button
         variant="contained"
         color="primary"
-        onClick={() => setShowFront(!showFront)}
+        onClick={handleTurn}
       >
         Turn
       </Button>
