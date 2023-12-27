@@ -20,7 +20,6 @@ function Review({ deckInReview }: DeckReviewProps) {
   const [cardInReview, setCardInReview] = React.useState<number>(0);
   const [reviewInProgress, setReviewInProgress] = React.useState<boolean>(true);
 
-  const [initialCardSide, setInitialCardSide] = useState<'front' | 'back'>('front');
   const [selectedSide, setSelectedSide] = useState<'front' | 'back' | 'random'>('front');
 
   const [loading, setLoading] = useState(true);
@@ -41,7 +40,6 @@ function Review({ deckInReview }: DeckReviewProps) {
       await updateCard(cards[cardInReview].id, moveCardToNewDeck);
       if (cardInReview < cards.length - 1) {
         setCardInReview((prev) => prev + 1);
-        setInitialCardSide(initialCardSide);
       } else {
         setReviewInProgress(false);
       }
@@ -58,7 +56,6 @@ function Review({ deckInReview }: DeckReviewProps) {
       await updateCard(cards[cardInReview].id, moveCardToNewDeck);
       if (cardInReview < cards.length - 1) {
         setCardInReview((prev) => prev + 1);
-        setInitialCardSide(initialCardSide);
       } else {
         setReviewInProgress(false);
       }
@@ -70,7 +67,6 @@ function Review({ deckInReview }: DeckReviewProps) {
   function skipCard() {
     if (cardInReview < cards.length - 1) {
       setCardInReview((prev) => prev + 1);
-      setInitialCardSide(initialCardSide);
       setLoading(true)
     } else {
       setReviewInProgress(false);
