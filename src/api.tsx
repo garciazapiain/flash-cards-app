@@ -65,7 +65,7 @@ export async function getDeckCards(deck: number): Promise<CardData[]> {
   const q = query(
     collectionRef,
     where("deck", "==", Number(deck)),
-    orderBy("lastUpdated"), 
+    orderBy("lastUpdated"),
   );
   const snapshot = await getDocs(q);
   const deckCards: CardData[] = snapshot.docs.map((doc: QueryDocumentSnapshot<DocumentData>) => {
@@ -84,6 +84,7 @@ export async function getDeckCards(deck: number): Promise<CardData[]> {
 }
 
 export async function updateCard(cardId: string, increment: number): Promise<void> {
+  console.log('will update card')
   try {
     // Get a reference to the card document in Firestore
     const cardRef = doc(collectionRef, cardId);
@@ -100,11 +101,27 @@ export async function updateCard(cardId: string, increment: number): Promise<voi
       // Update the lastUpdatedDate property to the current date and time
       cardData.lastUpdated = new Date();
 
+      console.log("Updating card:", cardData);
+
       // Update the card document in Firestore with the modified data
       await updateDoc(cardRef, cardData);
     }
   } catch (error) {
     console.error("Error updating card:", error);
+  }
+}
+
+export async function updateCardTimestamp(cardId: string): Promise<void> {
+  try {
+    const cardRef = doc(collectionRef, cardId);
+
+    // Only update the lastUpdated field
+    await updateDoc(cardRef, {
+      lastUpdated: new Date()
+    });
+
+  } catch (error) {
+    console.error("Error updating card timestamp:", error);
   }
 }
 

@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
 import Card from "./Card";
 import { DeckContext } from "../index";
-import { updateCard, discardCard } from "../../../api";
+import { updateCard, discardCard, updateCardTimestamp } from "../../../api";
 import { RadioGroup, FormControlLabel, Radio } from "@mui/material";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
@@ -64,10 +64,18 @@ function Review({ deckInReview }: DeckReviewProps) {
     }
   }
 
-  function skipCard() {
+  async function skipCard() {
+    if (cards.length === 0) return; // Avoid errors if no cards exist
+
+    const currentCardId = cards[cardInReview]?.id;
+
+    if (currentCardId) {
+      await updateCardTimestamp(currentCardId); // Only update the timestamp
+    }
+
     if (cardInReview < cards.length - 1) {
       setCardInReview((prev) => prev + 1);
-      setLoading(true)
+      setLoading(true);
     } else {
       setReviewInProgress(false);
     }
