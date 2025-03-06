@@ -10,11 +10,16 @@ import Grid from "@mui/material/Grid";
 // Define the props for the DeckReview component
 interface DeckReviewProps {
   deckInReview: number; // Replace with the appropriate type for deckInReview
+  deckOfDayOnly: boolean;
 }
 
-function Review({ deckInReview }: DeckReviewProps) {
+function Review({ deckInReview, deckOfDayOnly }: DeckReviewProps) {
   // Get the cards and setCards from the context
   const { cards } = useContext(DeckContext);
+
+  const filteredCards = deckOfDayOnly
+  ? cards.filter(card => card.data.deckOfDay)
+  : cards;
 
   // Define the types for state variables
   const [cardInReview, setCardInReview] = React.useState<number>(0);
@@ -29,7 +34,6 @@ function Review({ deckInReview }: DeckReviewProps) {
   const handleCardSideChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = (event.target as HTMLInputElement).value as 'front' | 'back' | 'random';
     setSelectedSide(value);
-    console.log(selectedSide)
   };
 
   async function correctCard() {
@@ -37,8 +41,8 @@ function Review({ deckInReview }: DeckReviewProps) {
     const lastDeck: boolean = deckInReview === 4;
     const moveCardToNewDeck: number = lastDeck ? 0 : 1;
     try {
-      await updateCard(cards[cardInReview].id, moveCardToNewDeck);
-      if (cardInReview < cards.length - 1) {
+      await updateCard(filteredCards[cardInReview].id, moveCardToNewDeck);
+      if (cardInReview < filteredCards.length - 1) {
         setCardInReview((prev) => prev + 1);
       } else {
         setReviewInProgress(false);
@@ -53,8 +57,8 @@ function Review({ deckInReview }: DeckReviewProps) {
     const firstDeck: boolean = deckInReview === 1;
     const moveCardToNewDeck: number = firstDeck ? 0 : -1;
     try {
-      await updateCard(cards[cardInReview].id, moveCardToNewDeck);
-      if (cardInReview < cards.length - 1) {
+      await updateCard(filteredCards[cardInReview].id, moveCardToNewDeck);
+      if (cardInReview < filteredCards.length - 1) {
         setCardInReview((prev) => prev + 1);
       } else {
         setReviewInProgress(false);
@@ -65,15 +69,15 @@ function Review({ deckInReview }: DeckReviewProps) {
   }
 
   async function skipCard() {
-    if (cards.length === 0) return; // Avoid errors if no cards exist
+    if (filteredCards.length === 0) return; // Avoid errors if no cards exist
 
-    const currentCardId = cards[cardInReview]?.id;
+    const currentCardId = filteredCards[cardInReview]?.id;
 
     if (currentCardId) {
       await updateCardTimestamp(currentCardId); // Only update the timestamp
     }
 
-    if (cardInReview < cards.length - 1) {
+    if (cardInReview < filteredCards.length - 1) {
       setCardInReview((prev) => prev + 1);
       setLoading(true);
     } else {
@@ -83,8 +87,8 @@ function Review({ deckInReview }: DeckReviewProps) {
 
   async function deleteCard() {
     try {
-      await discardCard(cards[cardInReview].id);
-      if (cardInReview < cards.length - 1) {
+      await discardCard(filteredCards[cardInReview].id);
+      if (cardInReview < filteredCards.length - 1) {
         setCardInReview((prev) => prev + 1);
       } else {
         setReviewInProgress(false);
@@ -100,9 +104,9 @@ function Review({ deckInReview }: DeckReviewProps) {
         setReviewInProgress(false);
       }
     }
-  }, [cardInReview, cards.length]);
+  }, [cardInReview, filteredCards.length]);
 
-  return reviewInProgress && cards.length ? (
+  return reviewInProgress && filteredCards.length ? (
     <div>
       <Typography variant="h4" gutterBottom>
         Deck {deckInReview} Review
@@ -112,7 +116,7 @@ function Review({ deckInReview }: DeckReviewProps) {
         <FormControlLabel value="back" control={<Radio />} label="Back first" />
         <FormControlLabel value="random" control={<Radio />} label="Random" />
       </RadioGroup>
-      <Card card={cards[cardInReview].data} selectedSide={selectedSide} loading={loading} setLoading={setLoading} />
+      <Card card={filteredCards[cardInReview].data} selectedSide={selectedSide} loading={loading} setLoading={setLoading} />
       <Grid container spacing={2}>
         <Grid margin={1} container spacing={2}>
           <Grid item xs={6}>

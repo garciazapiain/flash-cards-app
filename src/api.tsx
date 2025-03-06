@@ -30,6 +30,7 @@ export async function getCards(): Promise<CardData[]> {
         back: doc.data().back || "",
         deck: doc.data().deck || 0,
         lastUpdated: doc.data().lastUpdated?.toDate() || new Date(),
+        deckOfDay: doc.data().deckOfDay || false,
       },
     };
     return cardData;
@@ -76,6 +77,7 @@ export async function getDeckCards(deck: number): Promise<CardData[]> {
         back: doc.data().back || "",
         deck: doc.data().deck || 0,
         lastUpdated: doc.data().lastUpdated?.toDate() || new Date(),
+        deckOfDay: doc.data().deckOfDay || false,
       },
     };
     return cardData;
@@ -84,7 +86,6 @@ export async function getDeckCards(deck: number): Promise<CardData[]> {
 }
 
 export async function updateCard(cardId: string, increment: number): Promise<void> {
-  console.log('will update card')
   try {
     // Get a reference to the card document in Firestore
     const cardRef = doc(collectionRef, cardId);
@@ -100,8 +101,6 @@ export async function updateCard(cardId: string, increment: number): Promise<voi
 
       // Update the lastUpdatedDate property to the current date and time
       cardData.lastUpdated = new Date();
-
-      console.log("Updating card:", cardData);
 
       // Update the card document in Firestore with the modified data
       await updateDoc(cardRef, cardData);
@@ -139,4 +138,39 @@ export async function discardCard(cardId: string) {
     console.error("Error deleting card:", error);
     throw error; // Propagate the error for error handling in components
   }
+}
+
+// Set random deck of the day
+export async function setRandomDeckOfDay(deck: number, numberOfCards: number) {
+
+  const q = query(collectionRef, where("deck", "==", deck));
+  const snapshot = await getDocs(q);
+
+  const allCards = snapshot.docs;
+
+  // Reset all cards in the deck to deckOfDay: false
+  await Promise.all(
+    allCards.map(docSnap =>
+      updateDoc(doc(collectionRef, docSnap.id), { deckOfDay: false })
+    )
+  );
+
+  // Shuffle and select random cards
+  const shuffled = allCards.sort(() => 0.5 - Math.random());
+  const selected = shuffled.slice(0, numberOfCards);
+
+  // Set deckOfDay: true to the selected cards
+  await Promise.all(
+    selected.map(docSnap =>
+      updateDoc(doc(collectionRef, docSnap.id), { deckOfDay: true })
+    )
+  );
+}
+
+// Reset deck of the day
+export async function resetDeckOfDay(deck: number) {
+  const q = query(collectionRef, where("deck", "==", deck));
+  const snapshot = await getDocs(q);
+
+  await Promise.all(snapshot.docs.map(docSnap => updateDoc(doc(collectionRef, docSnap.id), { deckOfDay: false })));
 }

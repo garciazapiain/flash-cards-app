@@ -6,6 +6,7 @@ export interface CardData {
       back: string;
       deck: number;
       lastUpdated: Date;
+      deckOfDay: boolean;
     };
   }
   

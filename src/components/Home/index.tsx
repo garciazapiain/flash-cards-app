@@ -14,7 +14,6 @@ function Home() {
     const fetchCards = async () => {
       const fetchedCards = await getCards();
       setCards(fetchedCards); // Update the state with the fetched cards
-      console.log(fetchedCards);
     };
 
     fetchCards();
