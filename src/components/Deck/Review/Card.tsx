@@ -26,8 +26,8 @@ function Card({ card, selectedSide, loading, setLoading }: CardReviewProps) {
     }
   }, [selectedSide, card]);
 
-  const front = card?.front;
-  const back = card?.back;
+  const front = card?.front.toLowerCase();
+  const back = card?.back.toLowerCase();
 
   const handleTurn = () => {
     setCurrentCard(currentCard === 'front' ? 'back' : 'front');

@@ -174,3 +174,4 @@ export async function resetDeckOfDay(deck: number) {
 
   await Promise.all(snapshot.docs.map(docSnap => updateDoc(doc(collectionRef, docSnap.id), { deckOfDay: false })));
 }
+
