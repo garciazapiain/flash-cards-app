@@ -5,8 +5,8 @@ import { CardData } from "./components/types";
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
-  apiKey: "AIzaSyBkgIbTR-IsloHpqf1S5bTgjYvi6RU90ac",
-  authDomain: "flashdecks-2e557.firebaseapp.com",
+  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
+  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
   databaseURL: "https://flashdecks-2e557-default-rtdb.europe-west1.firebasedatabase.app",
   projectId: "flashdecks-2e557",
   storageBucket: "flashdecks-2e557.appspot.com",
