@@ -18,8 +18,8 @@ function Review({ deckInReview, deckOfDayOnly }: DeckReviewProps) {
   const { cards } = useContext(DeckContext);
 
   const filteredCards = deckOfDayOnly
-  ? cards.filter(card => card.data.deckOfDay)
-  : cards;
+    ? cards.filter(card => card.data.deckOfDay)
+    : cards;
 
   // Define the types for state variables
   const [cardInReview, setCardInReview] = React.useState<number>(0);
@@ -116,7 +116,7 @@ function Review({ deckInReview, deckOfDayOnly }: DeckReviewProps) {
         <FormControlLabel value="back" control={<Radio />} label="Back first" />
         <FormControlLabel value="random" control={<Radio />} label="Random" />
       </RadioGroup>
-      <Card card={filteredCards[cardInReview].data} selectedSide={selectedSide} loading={loading} setLoading={setLoading} />
+      <Card key={filteredCards[cardInReview].id} card={filteredCards[cardInReview].data} selectedSide={selectedSide} loading={loading} setLoading={setLoading} />
       <Grid container spacing={2}>
         <Grid margin={1} container spacing={2}>
           <Grid item xs={6}>
