@@ -175,3 +175,14 @@ export async function resetDeckOfDay(deck: number) {
   await Promise.all(snapshot.docs.map(docSnap => updateDoc(doc(collectionRef, docSnap.id), { deckOfDay: false })));
 }
 
+export async function generateSentence(word: string) {
+  const response = await fetch('/api/generateSentence', {
+    method: 'POST',
+    body: JSON.stringify({ word }),
+    headers: { 'Content-Type': 'application/json' }
+  });
+  const data = await response.json();
+  return data.sentence;
+}
+
+generateSentence('tree');
