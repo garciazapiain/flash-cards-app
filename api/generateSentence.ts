@@ -2,12 +2,10 @@ export default async function handler(req: Request): Promise<Response> {
   const { word } = await req.json();
   const apiKey = process.env.GROQ_API_KEY;
 
-  console.log(apiKey)
-
   const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
     method: 'POST',
     headers: {
-      'Authorization': `Bearer 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`,
+      'Authorization': `Bearer ${apiKey}`,
       'Content-Type': 'application/json',
     },
     body: JSON.stringify({
