@@ -11,18 +11,18 @@ export default async function handler(req: Request): Promise<Response> {
     body: JSON.stringify({
       model: 'llama3-8b-8192',
       messages: [
-        { role: 'system', content: 'You are a helpful assistant.' },
+        { role: 'system', content: 'You are a Czech language expert, specializing in proper grammar and sentence structure.' },
         {
           role: 'user',
-          content: `Write a short, grammatically correct sentence using "${word}". 
-            - If it is a **verb**, conjugate it with a **random pronoun** and in a **random tense** (present, past, or future).
-            - If it is a **noun**, use it in a **random case** (e.g., nominative, accusative, genitive, etc.) with natural sentence structure.
-            - If it is an **adjective**, apply it to a noun in a **random gender and case**, ensuring agreement.
-            - The sentence should sound **natural and idiomatic** in Czech.`
+          content: `Write a short, grammatically correct sentence using '${word}'.  
+      - If it is a **verb**, conjugate it correctly (past, present, or future), ensuring **proper subject-verb agreement**.  
+      - If it is a **noun**, use the **correct case** depending on its function in the sentence.  
+      - If it is an **adjective**, make sure it matches the **gender, number, and case** of the noun.  
+      - The sentence must sound **natural, fluent, and idiomatic in Czech**.`
         }
       ],
       max_tokens: 50,
-      temperature: 0.7,
+      temperature: 0.4,
     }),
   });
 
