@@ -5,6 +5,7 @@ import { getCards } from '../../api';
 import View from '../Deck/View';
 import { CardData } from '../types'; // Make sure to import the CardData type
 import { Button } from '@mui/material';
+import planImage from '../../assets/plan.webp'; // Import at the top
 
 function Home() {
   const [cards, setCards] = useState<CardData[]>([]);
@@ -41,6 +42,7 @@ function Home() {
         </Button>
       )}
       {viewToggle && <View cards={cards} />}
+      <img src={planImage} alt="Plan" style={{ marginTop: '1rem' }} />
     </div>
   );
 }
